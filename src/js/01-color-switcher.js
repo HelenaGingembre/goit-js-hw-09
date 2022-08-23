@@ -38,7 +38,7 @@ function getRandomHexColor() {
 btnStart.addEventListener('click', colorSwitcher.start);
 btnStop.addEventListener('click', colorSwitcher.stop);
 
-section = document.querySelector("section");
-section.style.textAlign = 'center';
-section.style.padding = '100px 0';
+// section = document.querySelector("section");
+// section.style.textAlign = 'center';
+// section.style.padding = '100px 0';
 

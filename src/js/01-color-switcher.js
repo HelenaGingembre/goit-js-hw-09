@@ -11,7 +11,7 @@ const colorSwitcher = {
         timerId = setInterval(()=> {
            body.style.backgroundColor=getRandomHexColor();
         }, 1000);
-        toogleButtonDisabled();
+       toogleButtonDisabled();
     },
     stop() {
         console.log('clearInterval'); 

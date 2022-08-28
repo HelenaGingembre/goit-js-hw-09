@@ -42,14 +42,14 @@ const options = {
 
 
 
-refs.startBtn.addEventListener('click', onStartСalculationTimer);
+refs.startBtn.addEventListener('click', onStartCounterTimer);
 // ініціалізую функцію flatpickr на елементі input[type="text"] c атрибутом id #datetime-picker
 flatpickr(refs.selectedDateTimer, options);
 
-function onStartСalculationTimer() {
+function onStartCounterTimer() {
     const deltaTime = pickerDate - Date.now();
     console.log('deltaTime: ', deltaTime);
-    //оновлює значення таймеру кожну 1 секунду
+    //оновлює значення таймеру кожну 1 секунду?????? не працюэ???setInterval
     const timerId = setInterval(() => {
 
         if (deltaTime === 0 || deltaTime < 0) {

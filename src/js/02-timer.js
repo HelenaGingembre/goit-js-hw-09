@@ -20,7 +20,8 @@ const options = {
   time_24hr: true, //Відображає засіб вибору часу в 24-годинному режимі без вибору AM/PM, якщо ввімкнено. :false
   defaultDate: new Date(), //Встановлює початкові вибрані дати.
   minuteIncrement: 1,  //Регулює крок для введення хвилин (включно з прокручуванням)
-  onClose(selectedDates) {
+  isActive:false,
+    onClose(selectedDates) {
     //   console.log(selectedDates[0]);
     //   console.log(selectedDates);
 
@@ -35,37 +36,45 @@ const options = {
     //робимо кнопку активною-  видяляємо атрибут disabled
     refs.startBtn.removeAttribute('disabled');
     },
- 
-  
 };
 
 
-
+// isActive = false;
 
 refs.startBtn.addEventListener('click', onStartCounterTimer);
 // ініціалізую функцію flatpickr на елементі input[type="text"] c атрибутом id #datetime-picker
 flatpickr(refs.selectedDateTimer, options);
 
 function onStartCounterTimer() {
-    const deltaTime = pickerDate - Date.now();
-    console.log('deltaTime: ', deltaTime);
-    //оновлює значення таймеру кожну 1 секунду?????? не працюэ???setInterval
+    if (options.isActive) {
+    return;
+    }
+    options.isActive = true;
+    
+    //оновлює значення таймеру кожну 1 секунду
     const timerId = setInterval(() => {
+       const currentDate = Date.now();  
+        // console.log('currentDate: ', currentDate);
+        const deltaTime = pickerDate - currentDate;
+        // console.log('deltaTime: ', deltaTime);
 
         if (deltaTime === 0 || deltaTime < 0) {
         clearInterval(timerId);
         }
     
         const { days, hours, minutes, seconds } = convertMs(deltaTime);
+        // console.log(convertMs(deltaTime));
         setTimer({ days, hours, minutes, seconds });
+        
+         
     }, 1000);
 };
 
 function setTimer({ days, hours, minutes, seconds }) {
-  refs.timerDays.textContent = `${addLeadingZero(days)}`;
-  refs.timerHours.textContent = `${addLeadingZero(hours)}`;
-  refs.timerMinutes.textContent = `${addLeadingZero(minutes)}`;
-  refs.timerSeconds.textContent = `${addLeadingZero(seconds)}`;
+  refs.timerDays.textContent = `${days}`;
+  refs.timerHours.textContent = `${hours}`;
+  refs.timerMinutes.textContent = `${minutes}`;
+  refs.timerSeconds.textContent = `${seconds}`;
 };
 
 //В интерфейсе таймера необходимо добавлять 0 если в числе меньше двух символов. 
@@ -82,13 +91,13 @@ function convertMs(ms) {
   const day = hour * 24;
 
   // Remaining days
-  const days = Math.floor(ms / day);
+  const days = addLeadingZero(Math.floor(ms / day));
   // Remaining hours
-  const hours = Math.floor((ms % day) / hour);
+  const hours =addLeadingZero( Math.floor((ms % day) / hour));
   // Remaining minutes
-  const minutes = Math.floor(((ms % day) % hour) / minute);
+  const minutes =addLeadingZero(Math.floor(((ms % day) % hour) / minute));
   // Remaining seconds
-  const seconds = Math.floor((((ms % day) % hour) % minute) / second);
+  const seconds = addLeadingZero(Math.floor((((ms % day) % hour) % minute) / second));
 
   return { days, hours, minutes, seconds };
 }

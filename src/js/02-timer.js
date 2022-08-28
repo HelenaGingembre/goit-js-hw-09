@@ -21,39 +21,51 @@ const options = {
   defaultDate: new Date(), //Встановлює початкові вибрані дати.
   minuteIncrement: 1,  //Регулює крок для введення хвилин (включно з прокручуванням)
   onClose(selectedDates) {
-    console.log(selectedDates[0]);
+    //   console.log(selectedDates[0]);
+    //   console.log(selectedDates);
 
-      pickerDate = selectedDates[0];
+     pickerDate = selectedDates[0];
+    //   console.log('pickerDate:', pickerDate);
       let dateNow = options.defaultDate;
       //якщо обрана дата (pickerDate) в минулому
       if (pickerDate < dateNow) {
         //   window.alert("Please choose a date in the future");
-          Notiflix.Report.warning('Please choose a date in the future');
+          Notiflix.Report.failure('Please choose a date in the future');
       }
-    //робимо кнопку активною
+    //робимо кнопку активною-  видяляємо атрибут disabled
     refs.startBtn.removeAttribute('disabled');
-  },
+    },
+ 
   
 };
 
+
+
+
+refs.startBtn.addEventListener('click', onStartСalculationTimer);
 // ініціалізую функцію flatpickr на елементі input[type="text"] c атрибутом id #datetime-picker
 flatpickr(refs.selectedDateTimer, options);
 
-refs.startBtn.addEventListener('click', startTimer);
-
-function startTimer() {
-
+function onStartСalculationTimer() {
+    const deltaTime = pickerDate - Date.now();
+    console.log('deltaTime: ', deltaTime);
     //оновлює значення таймеру кожну 1 секунду
     const timerId = setInterval(() => {
+
+        if (deltaTime === 0 || deltaTime < 0) {
+        clearInterval(timerId);
+        }
+    
+        const { days, hours, minutes, seconds } = convertMs(deltaTime);
         setTimer({ days, hours, minutes, seconds });
     }, 1000);
 };
 
 function setTimer({ days, hours, minutes, seconds }) {
-  refs.timerDays.textContent = `${days}`;
-  refs.timerHours.textContent = `${hours}`;
-  refs.timerMinutes.textContent = `${minutes}`;
-  refs.timerSeconds.textContent = `${seconds}`;
+  refs.timerDays.textContent = `${addLeadingZero(days)}`;
+  refs.timerHours.textContent = `${addLeadingZero(hours)}`;
+  refs.timerMinutes.textContent = `${addLeadingZero(minutes)}`;
+  refs.timerSeconds.textContent = `${addLeadingZero(seconds)}`;
 };
 
 //В интерфейсе таймера необходимо добавлять 0 если в числе меньше двух символов. 
@@ -62,7 +74,6 @@ function addLeadingZero(value) {
 }
 //Для подсчета значений используй готовую функцию convertMs, 
 //где ms - разница между конечной и текущей датой в миллисекундах.
-
 function convertMs(ms) {
   // Number of milliseconds per unit of time
   const second = 1000;

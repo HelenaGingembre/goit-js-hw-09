@@ -22,11 +22,15 @@ const colorSwitcher = {
 
 function toogleButtonDisabled() {
     if (btnStart.disabled) {
-        btnStart.disabled = false;
-        btnStop.disabled = true;
+       btnStart.removeAttribute('disabled');
+       btnStop.setAttribute('disabled', 'disabled');
+        // btnStart.disabled = false;
+        // btnStop.disabled = true;
     } else {
-        btnStart.disabled = true;
-        btnStop.disabled = false;
+        // btnStart.disabled = true;
+        // btnStop.disabled = false;
+        btnStop.removeAttribute('disabled');
+       btnStart.setAttribute('disabled', 'disabled');
     }
 }
 

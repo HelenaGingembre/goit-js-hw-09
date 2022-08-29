@@ -22,55 +22,48 @@ const options = {
   minuteIncrement: 1,  //Регулює крок для введення хвилин (включно з прокручуванням)
   isActive:false,
     onClose(selectedDates) {
-    //   console.log(selectedDates[0]);
-    //   console.log(selectedDates);
-
-     pickerDate = selectedDates[0];
-    //   console.log('pickerDate:', pickerDate);
-      let dateNow = options.defaultDate;
-      //якщо обрана дата (pickerDate) в минулому
-      if (pickerDate < dateNow) {
+      
+        console.log('defaultDate', options.defaultDate);
+      //якщо обрана дата (selectedDates[0]) в минулому
+      if (selectedDates[0] <= options.defaultDate) {
         //   window.alert("Please choose a date in the future");
           Notiflix.Report.failure('Please choose a date in the future');
-      }
-    //робимо кнопку активною-  видяляємо атрибут disabled
-    refs.startBtn.removeAttribute('disabled');
+      } else {
+        //робимо кнопку активною-  видяляємо атрибут disabled
+          refs.startBtn.removeAttribute('disabled');
+        }
     },
 };
-
-
-// isActive = false;
 
 refs.startBtn.addEventListener('click', onStartCounterTimer);
 // ініціалізую функцію flatpickr на елементі input[type="text"] c атрибутом id #datetime-picker
 flatpickr(refs.selectedDateTimer, options);
 
 function onStartCounterTimer() {
-    if (options.isActive) {
-    return;
-    }
-    options.isActive = true;
-    
-    //оновлює значення таймеру кожну 1 секунду
+    const inputDate = new Date(refs.selectedDateTimer.value);
+  //   console.log(inputDate);
+   refs.startBtn.setAttribute('disabled', 'disabled');
+   //оновлює значення таймеру кожну 1 секунду
     const timerId = setInterval(() => {
        const currentDate = Date.now();  
         // console.log('currentDate: ', currentDate);
-        const deltaTime = pickerDate - currentDate;
+        
+        const deltaTime = inputDate - currentDate;
         // console.log('deltaTime: ', deltaTime);
 
         if (deltaTime === 0 || deltaTime < 0) {
-        clearInterval(timerId);
+            clearInterval(timerId);
+            Notiflix.Report.info('The timer stopped');
         }
     
         const { days, hours, minutes, seconds } = convertMs(deltaTime);
-        // console.log(convertMs(deltaTime));
-        setTimer({ days, hours, minutes, seconds });
-        
-         
+          console.log(convertMs(deltaTime));
+        updateTimer({ days, hours, minutes, seconds });
+      
     }, 1000);
 };
 
-function setTimer({ days, hours, minutes, seconds }) {
+function updateTimer({ days, hours, minutes, seconds }) {
   refs.timerDays.textContent = `${days}`;
   refs.timerHours.textContent = `${hours}`;
   refs.timerMinutes.textContent = `${minutes}`;
@@ -90,18 +83,10 @@ function convertMs(ms) {
   const hour = minute * 60;
   const day = hour * 24;
 
-  // Remaining days
   const days = addLeadingZero(Math.floor(ms / day));
-  // Remaining hours
   const hours =addLeadingZero( Math.floor((ms % day) / hour));
-  // Remaining minutes
   const minutes =addLeadingZero(Math.floor(((ms % day) % hour) / minute));
-  // Remaining seconds
   const seconds = addLeadingZero(Math.floor((((ms % day) % hour) % minute) / second));
 
   return { days, hours, minutes, seconds };
 }
-
-// console.log(convertMs(2000)); // {days: 0, hours: 0, minutes: 0, seconds: 2}
-// console.log(convertMs(140000)); // {days: 0, hours: 0, minutes: 2, seconds: 20}
-// console.log(convertMs(24140000)); // {days: 0, hours: 6 minutes: 42, seconds: 20}

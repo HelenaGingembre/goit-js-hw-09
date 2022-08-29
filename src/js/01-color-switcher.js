@@ -24,13 +24,10 @@ function toogleButtonDisabled() {
     if (btnStart.disabled) {
        btnStart.removeAttribute('disabled');
        btnStop.setAttribute('disabled', 'disabled');
-        // btnStart.disabled = false;
-        // btnStop.disabled = true;
+        
     } else {
-        // btnStart.disabled = true;
-        // btnStop.disabled = false;
         btnStop.removeAttribute('disabled');
-       btnStart.setAttribute('disabled', 'disabled');
+        btnStart.setAttribute('disabled', 'disabled');
     }
 }
 

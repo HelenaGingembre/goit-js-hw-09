@@ -34,7 +34,7 @@ function countPromise( delay, step, amount) {
 // console.log("countPromise");
   setTimeout(() => {
     for (let i = 0; i < amount; i += 1) {
-      let timeDelay = delay + step * 1;
+      let timeDelay = delay + step * i;
       console.log("timeDelay", timeDelay);
       const position = i + 1;
       createPromise(position, timeDelay)

@@ -2,6 +2,7 @@ import flatpickr from "flatpickr";
 // Дополнительный импорт стилей
 import "flatpickr/dist/flatpickr.min.css";
 import Notiflix from 'notiflix';
+import dayjs from 'dayjs';
 
 
 const refs = {
@@ -23,9 +24,12 @@ const options = {
   isActive:false,
     onClose(selectedDates) {
       
-        console.log('defaultDate', options.defaultDate);
+      console.log('defaultDate', options.defaultDate);
+      const dateTest = dayjs(options.defaultDate).isAfter(selectedDates[0], 'day');
+      console.log('dateTest', dateTest);
       //якщо обрана дата (selectedDates[0]) в минулому
-      if (selectedDates[0] <= options.defaultDate) {
+      // if (selectedDates[0] <= options.defaultDate) {
+      if (dayjs(options.defaultDate).isAfter(selectedDates[0], 'day')){
         //   window.alert("Please choose a date in the future");
           Notiflix.Report.failure('Please choose a date in the future');
       } else {
